@@ -5,7 +5,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "DenisKisel\\NestedCategories\\": "src/"
+            "DenisKisel\\NestedCategory\\": "src/"
         },
         "files": ["src/helper.php"]
     },
