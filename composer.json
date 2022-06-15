@@ -1,0 +1,26 @@
+{
+    "name": "denis-kisel/nested-categories",
+    "description": "Nested Categories",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "DenisKisel\\NestedCategories\\": "src/"
+        },
+        "files": ["src/helper.php"]
+    },
+    "authors": [
+        {
+            "name": "Denis",
+            "email": "denis.kisel92@gmail.com"
+        }
+    ],
+    "require": {},
+    "extra": {
+        "laravel": {
+            "providers": [
+                "DenisKisel\\NestedCategory\\ServiceProvider"
+            ]
+        }
+    }
+}
