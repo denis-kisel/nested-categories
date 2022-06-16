@@ -6,6 +6,7 @@ class LeafTest extends \PHPUnit\Framework\TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        Schema::dropIfExists('test_leafs');
         Schema::create('test_leafs', function (\Illuminate\Database\Schema\Blueprint $table) {
             $table->increments('id');
             $table->bigInteger('category_id');
@@ -50,7 +51,7 @@ class LeafTest extends \PHPUnit\Framework\TestCase
     protected function seedLeafs()
     {
         foreach (\App\Models\Category::all() as $category) {
-            DenisKisel\NestedCategory\TestLeaf::insert([
+            \DenisKisel\NestedCategory\TestLeafModel::insert([
                 ['category_id' => $category->id],
                 ['category_id' => $category->id],
                 ['category_id' => $category->id],
