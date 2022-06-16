@@ -32,11 +32,11 @@ function findPath(int $id, \Illuminate\Database\Eloquent\Model|\Illuminate\Suppo
     }
 }
 
-function categoryToArrayTree(string $categoryClassName, $fields = ['id', 'parent_id', 'name']) :array
+function categoryToArrayTree(string $categoryClassName, $fields = ['id', 'parent_id', 'name'], $associative = true) :array
 {
     $categories = $categoryClassName::all();
 
-    $output = ($mkTreeFn = function ($parentId = null) use ($categories, $fields, &$mkTreeFn) {
+    $output = ($mkTreeFn = function ($parentId = null) use ($categories, $fields, &$mkTreeFn, $associative) {
         $output = [];
         if (is_null($parentId)) {
             $children = $categories->whereNull('parent_id');
@@ -50,6 +50,7 @@ function categoryToArrayTree(string $categoryClassName, $fields = ['id', 'parent
                     $node[$field] = $child->{$field};
                 }
                 $node['children'] = $mkTreeFn($child->id);
+                settype($node, $associative ? 'array' : 'object');
                 $output[] = $node;
             }
             return $output;

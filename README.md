@@ -93,8 +93,37 @@ $result = Category::asArrayTree(cacheTTL: 10);
 
 $result = Category::asArrayTree();
 //Data without cache
+
+
+# Get array of objects
+$result = Category::asArrayTree(associative: false);
+dump($result)
+//Output:
+[
+    {
+        name: 'Parent',
+        order: 0,
+        children: [{...}]
+    },
+....
+]
 ```
 
+
+### Breadcrumbs
+Backend use one sql query for N nested categories
+```php
+$category = Category::find(2)
+dump($category->breadcrumbs());
+
+//Output
+Collection {
+    array:2 [
+        Category {id: 1, ...},
+        Category {id: 2, ...},
+    ]   
+}
+```
 
 ### Additional Commands
 ```

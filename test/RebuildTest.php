@@ -10,6 +10,13 @@ class RebuildTest extends \PHPUnit\Framework\TestCase
         Schema::enableForeignKeyConstraints();
         Artisan::call(\DenisKisel\NestedCategory\Commands\NestedCategoryInstallCommand::class);
         $this->seedCategories();
+        $this->rmMigrate();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $this->rmMigrate();
     }
 
     public function test_rebuild()
@@ -20,6 +27,13 @@ class RebuildTest extends \PHPUnit\Framework\TestCase
         rebuildNestedCategories(\App\Models\Category::class);
         $this->assertEquals([5, 3, 1], json_decode(\App\Models\Category::find(7)->path));
         $this->assertEquals([90, 100], json_decode(\App\Models\Category::find(80)->path));
+    }
+
+    public function test_breadcrumbs()
+    {
+        \App\Models\Category::rebuild();
+        $this->assertEquals([1, 3, 5, 7], \App\Models\Category::find(7)->breadcrumbs()->pluck('id')->toArray());
+        $this->assertEquals([100, 90, 80], \App\Models\Category::find(80)->breadcrumbs()->pluck('id')->toArray());
     }
 
     public function test_category_to_tree_array()
@@ -99,5 +113,12 @@ class RebuildTest extends \PHPUnit\Framework\TestCase
                 'name' => $name
             ]);
         }
+    }
+
+
+    protected function rmMigrate()
+    {
+        $res = File::delete(File::glob(database_path('migrations/*_create_nested_categories_table*')));
+        \Illuminate\Support\Facades\DB::table('migrations')->where('migration', 'like', '%create_nested_categories_table')->delete();
     }
 }
