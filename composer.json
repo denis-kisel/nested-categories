@@ -15,12 +15,14 @@
             "email": "denis.kisel92@gmail.com"
         }
     ],
-    "require": {},
     "extra": {
         "laravel": {
             "providers": [
                 "DenisKisel\\NestedCategory\\ServiceProvider"
             ]
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
     }
 }
