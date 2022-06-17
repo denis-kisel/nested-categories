@@ -21,7 +21,7 @@ class CreateNestedCategoriesTable extends Migration
             $table->text('description')->nullable();
             $table->timestamps();
 
-            $table->foreign('parent_id')->on('categories')->references('id')
+            $table->foreign('parent_id')->on('{tableName}')->references('id')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
         });

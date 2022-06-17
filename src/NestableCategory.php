@@ -2,11 +2,11 @@
 
 namespace DenisKisel\NestedCategory;
 
-use App\Models\Category;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 /**
@@ -45,8 +45,9 @@ trait NestableCategory
 
     public function leafs(string $leafClassName, $foreign = null)
     {
-        $foreign ??= Str::singular($this->getTable());
-        $categoryIds = static::whereJsonContains('path', $this->id);
+        $foreign ??= Str::singular($this->getTable()) . '_id';
+        $categoryIds = static::whereJsonContains('path', DB::raw("CAST({$this->id} as JSON)"))->get('id')->pluck('id');
+        $categoryIds->push($this->id);
         return $leafClassName::whereIn($foreign, $categoryIds);
     }
 

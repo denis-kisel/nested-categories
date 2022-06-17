@@ -13,6 +13,7 @@ composer require denis-kisel/nested-categories
 ```
 
 
+
 ### Install or upgrade Category table
 
 If you have not yet category table, install it:
@@ -33,6 +34,64 @@ php artisan nested-category:upgrade App\\Models\\Category
 ```
 
 
+### <a id="configure"></a>Configure
+Add trait `NestableCategory` to category model
+```
+use DenisKisel\NestedCategory\NestableCategory;
+
+class Category extends Model
+{
+    use NestableCategory;
+    ....
+}
+```
+
+Add `path` to fillable or set guarded
+```
+class Category extends Model
+{
+    ....
+    protected $fillable = ['path'];
+    ....
+}
+
+#OR
+class Category extends Model
+{
+    ....
+    protected $guarded = [];
+    ....
+}
+```
+
+**[Optional]**  
+Add trait `AutoRebuildNested` to category model for auto rebuild category structure after events: `created`, `updated`, `deleted`. 
+BUT ITS DONT AUTO REBUILD AFTER BATCH OPERATION(see [Rebuild Structure](#rebuild-structure)). 
+
+> Background use one query for rebuild all table
+
+```
+use DenisKisel\NestedCategory\NestableCategory;
+use DenisKisel\NestedCategory\AutoRebuildNested;
+
+class Category extends Model
+{
+    use NestableCategory, AutoRebuildNested;
+    ....
+}
+
+#The same
+$category->save();
+$category->rebuild();
+
+$category->update();
+$category->rebuild();
+
+$category->delete();
+$category->rebuild();
+```
+
+## Usage
 ### Tree As Array
 | id  | parent_id | name   | order |
 |-----|-----------|--------|-------|
@@ -123,6 +182,74 @@ Collection {
         Category {id: 2, ...},
     ]   
 }
+```
+
+
+### Leafs(Nested Products, Posts, Podcasts, etc..)
+Input tables: `categories`(id, parent_id, name), `products`(id, category_id, name).  
+Backend use one sql query for nested leafs
+```
+ParentCategory(id: 1)
+│   Product_1
+│   Product_2    
+│
+└───ChildCategory_1(id: 2)
+│   │   Product_3
+│   │   Product_4
+│   │
+│   └───ChildCategory_1_1(id: 3)
+│       │   Product_5
+│       │   Product_6
+│   
+└───ChildCategory_2(id: 4)
+    │   Product_7
+    │   Product_8
+```
+
+```
+#GetAllProducts
+$products = Category::find(1)->leafs(App\Models\Product::class)->get();
+dump($products->count());
+//Output: 8
+```
+
+```
+#In Models\Category
+....
+public nestedProducts() :Builder
+{
+    return $this->leafs(Product::class)
+}
+
+public nestedPosts() :Builder
+{
+    return $this->leafs(Post::class)
+}
+....
+
+#Client Code
+$products = Category::find(1)->nestedProducts()->where('name', 'like', '%some%')->get();
+$products = Category::first()->nestedPosts()->count();
+```
+
+### <a id="rebuild-structure"></a>Rebuild Structure
+After BATCH CRUD operations for rebuild categories structure, need to use `rebuild` method.
+Or you can use trait `AutoRebuildNested` after single operation(see more in [Configure](#configure))
+> Background use one query for rebuild all table
+```php
+# Inserts
+Category::insert([
+    ['id' => 1, 'parent_id' => null],
+    ['id' => 2, 'parent_id' => 1],
+    ['id' => 3, 'parent_id' => 2],
+    .....
+])
+
+Category::rebuild();
+
+# Delete
+Category::where('is_active', false)->delete();
+Category::rebuild();
 ```
 
 ### Additional Commands

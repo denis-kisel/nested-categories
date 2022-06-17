@@ -4,20 +4,19 @@ function rebuildNestedCategories(string $className)
 {
     /** @var \Illuminate\Database\Eloquent\Model|\Illuminate\Support\Collection $categories */
     $categories = $className::all();
+    $tableName = app($className)->getTable();
 
     $toUpdate = [];
     if ($categories->isNotEmpty()) {
         foreach ($categories as $category) {
-            //TODO Update by upsert
-//            $toUpdate[] = [
-//                'id' => $category->id,
-//                'path' => findPath($category->id, $categories)
-//            ];
-            $category->update(['path' => findPath($category->id, $categories)]);
+            $toUpdate[] = [
+                'id' => $category->id,
+                'path' => json_encode(findPath($category->id, $categories))
+            ];
         }
     }
 
-    //TODO Update by upsert
+    (new \DenisKisel\BatchUpdate\BatchUpdate($tableName, $toUpdate))->run();
 }
 
 function findPath(int $id, \Illuminate\Database\Eloquent\Model|\Illuminate\Support\Collection $categories, array &$ouput = []) :array

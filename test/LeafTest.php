@@ -6,27 +6,20 @@ class LeafTest extends \PHPUnit\Framework\TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        Schema::dropIfExists('test_leafs');
-        Schema::create('test_leafs', function (\Illuminate\Database\Schema\Blueprint $table) {
-            $table->increments('id');
-            $table->bigInteger('category_id');
-        });
+        \DenisKisel\NestedCategory\TestCategoryModel::reinstall();
+        \DenisKisel\NestedCategory\TestLeafModel::reinstall();
 
-        \App\Models\Category::where('id', '>', 0)->delete();
         $this->seedCategories();
         $this->seedLeafs();
-        \App\Models\Category::rebuild();
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        Schema::dropIfExists('test_leafs');
+        \DenisKisel\NestedCategory\TestCategoryModel::rebuild();
     }
 
     public function test_get_leafs()
     {
-        $this->assertEquals(3, \App\Models\Category::find(1)->leafs(TestLeaf::class)->count());
+        $this->assertEquals(12, \DenisKisel\NestedCategory\TestCategoryModel::find(1)->leafs(\DenisKisel\NestedCategory\TestLeafModel::class)->count());
+        $this->assertEquals(6, \DenisKisel\NestedCategory\TestCategoryModel::find(3)->leafs(\DenisKisel\NestedCategory\TestLeafModel::class)->count());
+        $this->assertEquals(3, \DenisKisel\NestedCategory\TestCategoryModel::find(4)->leafs(\DenisKisel\NestedCategory\TestLeafModel::class)->count());
+        $this->assertEquals(3, \DenisKisel\NestedCategory\TestCategoryModel::find(5)->leafs(\DenisKisel\NestedCategory\TestLeafModel::class)->count());
     }
 
     protected function seedCategories()
@@ -40,7 +33,7 @@ class LeafTest extends \PHPUnit\Framework\TestCase
         ];
 
         foreach ($inserts as [0 => $id, 1 => $parentId, 2 => $name]) {
-            \App\Models\Category::insert([
+            \DenisKisel\NestedCategory\TestCategoryModel::insert([
                 'id' => $id,
                 'parent_id' => $parentId,
                 'name' => $name
@@ -50,11 +43,11 @@ class LeafTest extends \PHPUnit\Framework\TestCase
 
     protected function seedLeafs()
     {
-        foreach (\App\Models\Category::all() as $category) {
+        foreach (\DenisKisel\NestedCategory\TestCategoryModel::all() as $category) {
             \DenisKisel\NestedCategory\TestLeafModel::insert([
-                ['category_id' => $category->id],
-                ['category_id' => $category->id],
-                ['category_id' => $category->id],
+                ['test_category_id' => $category->id],
+                ['test_category_id' => $category->id],
+                ['test_category_id' => $category->id],
             ]);
         }
     }

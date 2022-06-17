@@ -4,8 +4,45 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "364eeae1434d220285192d3c9f531ac6",
-    "packages": [],
+    "content-hash": "3faf8648dfae0c24b25de983360fe1da",
+    "packages": [
+        {
+            "name": "denis-kisel/batch-update",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/denis-kisel/batch-update.git",
+                "reference": "9465a8b5cb5a5c82c3d43a7f6db4cb25b55cd085"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/denis-kisel/batch-update/zipball/9465a8b5cb5a5c82c3d43a7f6db4cb25b55cd085",
+                "reference": "9465a8b5cb5a5c82c3d43a7f6db4cb25b55cd085",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "DenisKisel\\BatchUpdate\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Denis Kisel"
+                }
+            ],
+            "description": "Batch Update",
+            "support": {
+                "issues": "https://github.com/denis-kisel/batch-update/issues",
+                "source": "https://github.com/denis-kisel/batch-update/tree/v1.0.0"
+            },
+            "time": "2022-06-17T10:39:13+00:00"
+        }
+    ],
     "packages-dev": [
         {
             "name": "doctrine/instantiator",
