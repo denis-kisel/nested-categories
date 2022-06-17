@@ -36,7 +36,7 @@ php artisan nested-category:upgrade App\\Models\\Category
 
 ### <a id="configure"></a>Configure
 Add trait `NestableCategory` to category model
-```
+```php
 use DenisKisel\NestedCategory\NestableCategory;
 
 class Category extends Model
@@ -47,7 +47,7 @@ class Category extends Model
 ```
 
 Add `path` to fillable or set guarded
-```
+```php
 class Category extends Model
 {
     ....
@@ -70,7 +70,7 @@ BUT ITS DONT AUTO REBUILD AFTER BATCH OPERATION(see [Rebuild Structure](#rebuild
 
 > Background use one query for rebuild all table
 
-```
+```php
 use DenisKisel\NestedCategory\NestableCategory;
 use DenisKisel\NestedCategory\AutoRebuildNested;
 
@@ -213,7 +213,7 @@ dump($products->count());
 //Output: 8
 ```
 
-```
+```php
 #In Models\Category
 ....
 public nestedProducts() :Builder
