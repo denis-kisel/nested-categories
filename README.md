@@ -1,6 +1,8 @@
 # nested-categories
 
-### Support only for
+This library provide optimize common usage categories functional, such as: `category tree`, `breadcrumbs`, `child category items` by one sql query
+
+### Support for
 `mysql5.7.22+`
 `laravel`
 `php8.0+`
@@ -185,7 +187,7 @@ Collection {
 ```
 
 
-### Leafs(Nested Products, Posts, Podcasts, etc..)
+### Leafs/child category items(Nested Products, Posts, Podcasts, etc..)
 Input tables: `categories`(id, parent_id, name), `products`(id, category_id, name).  
 Backend use one sql query for nested leafs
 ```
