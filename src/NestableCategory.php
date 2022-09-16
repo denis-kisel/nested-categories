@@ -27,7 +27,7 @@ trait NestableCategory
         return $output->reverse();
     }
 
-    public function asArrayTree(array $fields = ['id', 'parent_id', 'name'], \DateTimeInterface|int|null $cacheTTL = null, $associative = true)
+    public function asArrayTree(array $fields = ['id', 'parent_id', 'name'], \DateTimeInterface|int|null $cacheTTL = null, $associative = true, $sortBy = 'id', $sortDirect = 'asc')
     {
         $cacheKey = 'nestable_category.array_tree';
         if (!is_null($cacheTTL)) {
@@ -35,12 +35,12 @@ trait NestableCategory
             if ($cashed) {
                 return $cashed;
             }
-            $result = categoryToArrayTree(static::class, $fields, $associative);
+            $result = categoryToArrayTree(static::class, $fields, $associative, $sortBy, $sortDirect);
             Cache::put($cacheKey, $result, $cacheTTL);
             return $result;
         }
 
-        return categoryToArrayTree(static::class, $fields);
+        return categoryToArrayTree(static::class, $fields, $associative, $sortBy, $sortDirect);
     }
 
     public function leafs(string $leafClassName, $foreign = null)

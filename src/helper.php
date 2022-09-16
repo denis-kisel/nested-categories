@@ -31,18 +31,26 @@ function findPath(int $id, \Illuminate\Database\Eloquent\Model|\Illuminate\Suppo
     }
 }
 
-function categoryToArrayTree(string $categoryClassName, $fields = ['id', 'parent_id', 'name'], $associative = true) :array
+function categoryToArrayTree(string $categoryClassName, $fields = ['id', 'parent_id', 'name'], $associative = true, $sortBy = 'id', $sortDirect = 'asc') :array
 {
     $categories = $categoryClassName::all();
 
-    $output = ($mkTreeFn = function ($parentId = null) use ($categories, $fields, &$mkTreeFn, $associative) {
+    $output = ($mkTreeFn = function ($parentId = null) use ($categories, $fields, &$mkTreeFn, $associative, $sortBy, $sortDirect) {
         $output = [];
         if (is_null($parentId)) {
             $children = $categories->whereNull('parent_id');
         } else {
             $children = $categories->where('parent_id', $parentId);
         }
+        /** @var \Illuminate\Support\Collection $children */
         if ($children->isNotEmpty()) {
+
+            if ($sortDirect == 'asc') {
+                $children = $children->sortBy($sortBy);
+            } else {
+                $children = $children->sortByDesc($sortBy);
+            }
+
             foreach ($children as $child) {
                 $node = [];
                 foreach ($fields as $field) {
