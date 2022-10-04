@@ -21,7 +21,7 @@ function rebuildNestedCategories(string $className)
 
 function findPath(int $id, \Illuminate\Database\Eloquent\Model|\Illuminate\Support\Collection $categories, array &$ouput = []) :array
 {
-    $parentId = $categories->where('id', $id)->first()->parent_id;
+    $parentId = $categories->where('id', $id)->first()->parent_id ?? null;
     if (!is_null($parentId)) {
         $ouput[] = $parentId;
         findPath($parentId, $categories, $ouput);
